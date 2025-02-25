@@ -1,0 +1,2527 @@
+Grammar
+
+    0 $accept: bison $end
+
+    1 bison: lines
+
+    2 lines: line
+    3      | line lines
+    4      | line endexpr
+
+    5 line: contents ENDL
+    6     | ENDL
+
+    7 contents: LABEL
+    8         | LABEL expr
+    9         | LABEL dir
+   10         | expr
+   11         | dir
+
+   12 dir: globdir
+   13    | externdir
+   14    | sectiondir
+   15    | worddir
+   16    | skipdir
+   17    | asciidir
+   18    | equdir
+
+   19 globdir: GLOBAL gelist
+
+   20 gelist: SYMBOL
+   21       | gelist SEP SYMBOL
+
+   22 externdir: EXTERN gelist
+
+   23 sectiondir: SECTION SYMBOL
+
+   24 worddir: WORD wlist
+
+   25 wlist: wordelem
+   26      | wlist SEP wordelem
+
+   27 wordelem: SYMBOL
+   28         | LITERRAL
+   29         | DOT
+
+   30 skipdir: SKIP LITERRAL
+
+   31 asciidir: ASCII STRING
+
+   32 equdir: EQU SYMBOL SEP numexpr
+
+   33 numexpr: LITERRAL
+   34        | SYMBOL
+   35        | DOT
+   36        | SUBEXPRSTART numexpr SUBEXPREND
+   37        | MINUS numexpr
+   38        | NOTOP numexpr
+   39        | numexpr PLUS numexpr
+   40        | numexpr MINUS numexpr
+   41        | numexpr MULOP numexpr
+   42        | numexpr DIVOP numexpr
+   43        | numexpr MOD numexpr
+   44        | numexpr GEQ numexpr
+   45        | numexpr LEQ numexpr
+   46        | numexpr SHLOP numexpr
+   47        | numexpr SHROP numexpr
+   48        | numexpr LAND numexpr
+   49        | numexpr LOR numexpr
+   50        | numexpr OROP numexpr
+   51        | numexpr ANDOP numexpr
+   52        | numexpr XOROP numexpr
+   53        | numexpr ORNOT numexpr
+   54        | numexpr EQ numexpr
+   55        | numexpr NEQ numexpr
+   56        | numexpr LESS numexpr
+   57        | numexpr GREAT numexpr
+
+   58 expr: NOINSTR
+   59     | OINSTR operand
+   60     | GGOINSTR GPR SEP GPR SEP boperand
+   61     | GINSTR GPR
+   62     | GGINSTR GPR SEP GPR
+   63     | OGINSTR operand SEP GPR
+   64     | GOINSTR GPR SEP operand
+   65     | CGINSTR CSR SEP GPR
+   66     | GCINSTR GPR SEP CSR
+
+   67 boperand: LITERRAL
+   68         | SYMBOL
+   69         | DOT
+
+   70 operand: DOLLAR LITERRAL
+   71        | DOLLAR SYMBOL
+   72        | DOLLAR DOT
+   73        | LITERRAL
+   74        | SYMBOL
+   75        | DOT
+   76        | GPR
+   77        | EXPRSTART GPR EXPREND
+   78        | EXPRSTART GPR PLUS boperand EXPREND
+
+   79 NOINSTR: HALT
+   80        | INT
+   81        | IRET
+   82        | RET
+
+   83 OINSTR: CALL
+   84       | JMP
+
+   85 GGOINSTR: BEQ
+   86         | BNE
+   87         | BGT
+
+   88 GINSTR: PUSH
+   89       | POP
+   90       | NOT
+
+   91 GGINSTR: XCHG
+   92        | ADD
+   93        | SUB
+   94        | MUL
+   95        | DIV
+   96        | AND
+   97        | OR
+   98        | XOR
+   99        | SHL
+  100        | SHR
+
+  101 OGINSTR: LD
+
+  102 GOINSTR: ST
+
+  103 CGINSTR: CSRRD
+
+  104 GCINSTR: CSRWR
+
+  105 endexpr: END
+  106        | END ENDL
+
+
+Terminals, with rules where they appear
+
+    $end (0) 0
+    error (256)
+    SYMBOL <sval> (258) 20 21 23 27 32 34 68 71 74
+    LITERRAL <sval> (259) 28 30 33 67 70 73
+    GPR <sval> (260) 60 61 62 63 64 65 66 76 77 78
+    CSR <sval> (261) 65 66
+    LABEL <sval> (262) 7 8 9
+    DOT <sval> (263) 29 35 69 72 75
+    STRING <sval> (264) 31
+    HALT <opcode> (265) 79
+    INT <opcode> (266) 80
+    IRET <opcode> (267) 81
+    CALL <opcode> (268) 83
+    RET <opcode> (269) 82
+    JMP <opcode> (270) 84
+    BEQ <opcode> (271) 85
+    BNE <opcode> (272) 86
+    BGT <opcode> (273) 87
+    PUSH <opcode> (274) 88
+    POP <opcode> (275) 89
+    XCHG <opcode> (276) 91
+    ADD <opcode> (277) 92
+    SUB <opcode> (278) 93
+    MUL <opcode> (279) 94
+    DIV <opcode> (280) 95
+    NOT <opcode> (281) 90
+    AND <opcode> (282) 96
+    OR <opcode> (283) 97
+    XOR <opcode> (284) 98
+    SHL <opcode> (285) 99
+    SHR <opcode> (286) 100
+    LD <opcode> (287) 101
+    ST <opcode> (288) 102
+    CSRRD <opcode> (289) 103
+    CSRWR <opcode> (290) 104
+    GLOBAL <opcode> (291) 19
+    EXTERN <opcode> (292) 22
+    SECTION <opcode> (293) 23
+    WORD <opcode> (294) 24
+    SKIP <opcode> (295) 30
+    ASCII <opcode> (296) 31
+    EQU <opcode> (297) 32
+    END <opcode> (298) 105 106
+    LAND <sval> (299) 48
+    LOR <sval> (300) 49
+    EQ <sval> (301) 54
+    NEQ <sval> (302) 55
+    LEQ <sval> (303) 45
+    LESS <sval> (304) 56
+    GREAT <sval> (305) 57
+    GEQ <sval> (306) 44
+    PLUS <sval> (307) 39 78
+    MINUS <sval> (308) 37 40
+    OROP <sval> (309) 50
+    ANDOP <sval> (310) 51
+    XOROP <sval> (311) 52
+    ORNOT <sval> (312) 53
+    MULOP <sval> (313) 41
+    DIVOP <sval> (314) 42
+    MOD <sval> (315) 43
+    SHROP <sval> (316) 47
+    SHLOP <sval> (317) 46
+    NOTOP <sval> (318) 38
+    SEP (319) 21 26 32 60 62 63 64 65 66
+    EXPRSTART (320) 77 78
+    EXPREND (321) 77 78
+    DOLLAR (322) 70 71 72
+    SUBEXPRSTART (323) 36
+    SUBEXPREND (324) 36
+    ENDL (325) 5 6 106
+
+
+Nonterminals, with rules where they appear
+
+    $accept (71)
+        on left: 0
+    bison (72)
+        on left: 1
+        on right: 0
+    lines (73)
+        on left: 2 3 4
+        on right: 1 3
+    line (74)
+        on left: 5 6
+        on right: 2 3 4
+    contents (75)
+        on left: 7 8 9 10 11
+        on right: 5
+    dir <str> (76)
+        on left: 12 13 14 15 16 17 18
+        on right: 9 11
+    globdir <str> (77)
+        on left: 19
+        on right: 12
+    gelist <sval> (78)
+        on left: 20 21
+        on right: 19 21 22
+    externdir <str> (79)
+        on left: 22
+        on right: 13
+    sectiondir <str> (80)
+        on left: 23
+        on right: 14
+    worddir <str> (81)
+        on left: 24
+        on right: 15
+    wlist <sval> (82)
+        on left: 25 26
+        on right: 24 26
+    wordelem <sval> (83)
+        on left: 27 28 29
+        on right: 25 26
+    skipdir <str> (84)
+        on left: 30
+        on right: 16
+    asciidir <str> (85)
+        on left: 31
+        on right: 17
+    equdir <str> (86)
+        on left: 32
+        on right: 18
+    numexpr <sval> (87)
+        on left: 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57
+        on right: 32 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57
+    expr <str> (88)
+        on left: 58 59 60 61 62 63 64 65 66
+        on right: 8 10
+    boperand <sval> (89)
+        on left: 67 68 69
+        on right: 60 78
+    operand <sval> (90)
+        on left: 70 71 72 73 74 75 76 77 78
+        on right: 59 63 64
+    NOINSTR <opcode> (91)
+        on left: 79 80 81 82
+        on right: 58
+    OINSTR <opcode> (92)
+        on left: 83 84
+        on right: 59
+    GGOINSTR <opcode> (93)
+        on left: 85 86 87
+        on right: 60
+    GINSTR <opcode> (94)
+        on left: 88 89 90
+        on right: 61
+    GGINSTR <opcode> (95)
+        on left: 91 92 93 94 95 96 97 98 99 100
+        on right: 62
+    OGINSTR <opcode> (96)
+        on left: 101
+        on right: 63
+    GOINSTR <opcode> (97)
+        on left: 102
+        on right: 64
+    CGINSTR <opcode> (98)
+        on left: 103
+        on right: 65
+    GCINSTR <opcode> (99)
+        on left: 104
+        on right: 66
+    endexpr (100)
+        on left: 105 106
+        on right: 4
+
+
+State 0
+
+    0 $accept: • bison $end
+
+    LABEL    shift, and go to state 1
+    HALT     shift, and go to state 2
+    INT      shift, and go to state 3
+    IRET     shift, and go to state 4
+    CALL     shift, and go to state 5
+    RET      shift, and go to state 6
+    JMP      shift, and go to state 7
+    BEQ      shift, and go to state 8
+    BNE      shift, and go to state 9
+    BGT      shift, and go to state 10
+    PUSH     shift, and go to state 11
+    POP      shift, and go to state 12
+    XCHG     shift, and go to state 13
+    ADD      shift, and go to state 14
+    SUB      shift, and go to state 15
+    MUL      shift, and go to state 16
+    DIV      shift, and go to state 17
+    NOT      shift, and go to state 18
+    AND      shift, and go to state 19
+    OR       shift, and go to state 20
+    XOR      shift, and go to state 21
+    SHL      shift, and go to state 22
+    SHR      shift, and go to state 23
+    LD       shift, and go to state 24
+    ST       shift, and go to state 25
+    CSRRD    shift, and go to state 26
+    CSRWR    shift, and go to state 27
+    GLOBAL   shift, and go to state 28
+    EXTERN   shift, and go to state 29
+    SECTION  shift, and go to state 30
+    WORD     shift, and go to state 31
+    SKIP     shift, and go to state 32
+    ASCII    shift, and go to state 33
+    EQU      shift, and go to state 34
+    ENDL     shift, and go to state 35
+
+    bison       go to state 36
+    lines       go to state 37
+    line        go to state 38
+    contents    go to state 39
+    dir         go to state 40
+    globdir     go to state 41
+    externdir   go to state 42
+    sectiondir  go to state 43
+    worddir     go to state 44
+    skipdir     go to state 45
+    asciidir    go to state 46
+    equdir      go to state 47
+    expr        go to state 48
+    NOINSTR     go to state 49
+    OINSTR      go to state 50
+    GGOINSTR    go to state 51
+    GINSTR      go to state 52
+    GGINSTR     go to state 53
+    OGINSTR     go to state 54
+    GOINSTR     go to state 55
+    CGINSTR     go to state 56
+    GCINSTR     go to state 57
+
+
+State 1
+
+    7 contents: LABEL •
+    8         | LABEL • expr
+    9         | LABEL • dir
+
+    HALT     shift, and go to state 2
+    INT      shift, and go to state 3
+    IRET     shift, and go to state 4
+    CALL     shift, and go to state 5
+    RET      shift, and go to state 6
+    JMP      shift, and go to state 7
+    BEQ      shift, and go to state 8
+    BNE      shift, and go to state 9
+    BGT      shift, and go to state 10
+    PUSH     shift, and go to state 11
+    POP      shift, and go to state 12
+    XCHG     shift, and go to state 13
+    ADD      shift, and go to state 14
+    SUB      shift, and go to state 15
+    MUL      shift, and go to state 16
+    DIV      shift, and go to state 17
+    NOT      shift, and go to state 18
+    AND      shift, and go to state 19
+    OR       shift, and go to state 20
+    XOR      shift, and go to state 21
+    SHL      shift, and go to state 22
+    SHR      shift, and go to state 23
+    LD       shift, and go to state 24
+    ST       shift, and go to state 25
+    CSRRD    shift, and go to state 26
+    CSRWR    shift, and go to state 27
+    GLOBAL   shift, and go to state 28
+    EXTERN   shift, and go to state 29
+    SECTION  shift, and go to state 30
+    WORD     shift, and go to state 31
+    SKIP     shift, and go to state 32
+    ASCII    shift, and go to state 33
+    EQU      shift, and go to state 34
+
+    $default  reduce using rule 7 (contents)
+
+    dir         go to state 58
+    globdir     go to state 41
+    externdir   go to state 42
+    sectiondir  go to state 43
+    worddir     go to state 44
+    skipdir     go to state 45
+    asciidir    go to state 46
+    equdir      go to state 47
+    expr        go to state 59
+    NOINSTR     go to state 49
+    OINSTR      go to state 50
+    GGOINSTR    go to state 51
+    GINSTR      go to state 52
+    GGINSTR     go to state 53
+    OGINSTR     go to state 54
+    GOINSTR     go to state 55
+    CGINSTR     go to state 56
+    GCINSTR     go to state 57
+
+
+State 2
+
+   79 NOINSTR: HALT •
+
+    $default  reduce using rule 79 (NOINSTR)
+
+
+State 3
+
+   80 NOINSTR: INT •
+
+    $default  reduce using rule 80 (NOINSTR)
+
+
+State 4
+
+   81 NOINSTR: IRET •
+
+    $default  reduce using rule 81 (NOINSTR)
+
+
+State 5
+
+   83 OINSTR: CALL •
+
+    $default  reduce using rule 83 (OINSTR)
+
+
+State 6
+
+   82 NOINSTR: RET •
+
+    $default  reduce using rule 82 (NOINSTR)
+
+
+State 7
+
+   84 OINSTR: JMP •
+
+    $default  reduce using rule 84 (OINSTR)
+
+
+State 8
+
+   85 GGOINSTR: BEQ •
+
+    $default  reduce using rule 85 (GGOINSTR)
+
+
+State 9
+
+   86 GGOINSTR: BNE •
+
+    $default  reduce using rule 86 (GGOINSTR)
+
+
+State 10
+
+   87 GGOINSTR: BGT •
+
+    $default  reduce using rule 87 (GGOINSTR)
+
+
+State 11
+
+   88 GINSTR: PUSH •
+
+    $default  reduce using rule 88 (GINSTR)
+
+
+State 12
+
+   89 GINSTR: POP •
+
+    $default  reduce using rule 89 (GINSTR)
+
+
+State 13
+
+   91 GGINSTR: XCHG •
+
+    $default  reduce using rule 91 (GGINSTR)
+
+
+State 14
+
+   92 GGINSTR: ADD •
+
+    $default  reduce using rule 92 (GGINSTR)
+
+
+State 15
+
+   93 GGINSTR: SUB •
+
+    $default  reduce using rule 93 (GGINSTR)
+
+
+State 16
+
+   94 GGINSTR: MUL •
+
+    $default  reduce using rule 94 (GGINSTR)
+
+
+State 17
+
+   95 GGINSTR: DIV •
+
+    $default  reduce using rule 95 (GGINSTR)
+
+
+State 18
+
+   90 GINSTR: NOT •
+
+    $default  reduce using rule 90 (GINSTR)
+
+
+State 19
+
+   96 GGINSTR: AND •
+
+    $default  reduce using rule 96 (GGINSTR)
+
+
+State 20
+
+   97 GGINSTR: OR •
+
+    $default  reduce using rule 97 (GGINSTR)
+
+
+State 21
+
+   98 GGINSTR: XOR •
+
+    $default  reduce using rule 98 (GGINSTR)
+
+
+State 22
+
+   99 GGINSTR: SHL •
+
+    $default  reduce using rule 99 (GGINSTR)
+
+
+State 23
+
+  100 GGINSTR: SHR •
+
+    $default  reduce using rule 100 (GGINSTR)
+
+
+State 24
+
+  101 OGINSTR: LD •
+
+    $default  reduce using rule 101 (OGINSTR)
+
+
+State 25
+
+  102 GOINSTR: ST •
+
+    $default  reduce using rule 102 (GOINSTR)
+
+
+State 26
+
+  103 CGINSTR: CSRRD •
+
+    $default  reduce using rule 103 (CGINSTR)
+
+
+State 27
+
+  104 GCINSTR: CSRWR •
+
+    $default  reduce using rule 104 (GCINSTR)
+
+
+State 28
+
+   19 globdir: GLOBAL • gelist
+
+    SYMBOL  shift, and go to state 60
+
+    gelist  go to state 61
+
+
+State 29
+
+   22 externdir: EXTERN • gelist
+
+    SYMBOL  shift, and go to state 60
+
+    gelist  go to state 62
+
+
+State 30
+
+   23 sectiondir: SECTION • SYMBOL
+
+    SYMBOL  shift, and go to state 63
+
+
+State 31
+
+   24 worddir: WORD • wlist
+
+    SYMBOL    shift, and go to state 64
+    LITERRAL  shift, and go to state 65
+    DOT       shift, and go to state 66
+
+    wlist     go to state 67
+    wordelem  go to state 68
+
+
+State 32
+
+   30 skipdir: SKIP • LITERRAL
+
+    LITERRAL  shift, and go to state 69
+
+
+State 33
+
+   31 asciidir: ASCII • STRING
+
+    STRING  shift, and go to state 70
+
+
+State 34
+
+   32 equdir: EQU • SYMBOL SEP numexpr
+
+    SYMBOL  shift, and go to state 71
+
+
+State 35
+
+    6 line: ENDL •
+
+    $default  reduce using rule 6 (line)
+
+
+State 36
+
+    0 $accept: bison • $end
+
+    $end  shift, and go to state 72
+
+
+State 37
+
+    1 bison: lines •
+
+    $default  reduce using rule 1 (bison)
+
+
+State 38
+
+    2 lines: line •
+    3      | line • lines
+    4      | line • endexpr
+
+    LABEL    shift, and go to state 1
+    HALT     shift, and go to state 2
+    INT      shift, and go to state 3
+    IRET     shift, and go to state 4
+    CALL     shift, and go to state 5
+    RET      shift, and go to state 6
+    JMP      shift, and go to state 7
+    BEQ      shift, and go to state 8
+    BNE      shift, and go to state 9
+    BGT      shift, and go to state 10
+    PUSH     shift, and go to state 11
+    POP      shift, and go to state 12
+    XCHG     shift, and go to state 13
+    ADD      shift, and go to state 14
+    SUB      shift, and go to state 15
+    MUL      shift, and go to state 16
+    DIV      shift, and go to state 17
+    NOT      shift, and go to state 18
+    AND      shift, and go to state 19
+    OR       shift, and go to state 20
+    XOR      shift, and go to state 21
+    SHL      shift, and go to state 22
+    SHR      shift, and go to state 23
+    LD       shift, and go to state 24
+    ST       shift, and go to state 25
+    CSRRD    shift, and go to state 26
+    CSRWR    shift, and go to state 27
+    GLOBAL   shift, and go to state 28
+    EXTERN   shift, and go to state 29
+    SECTION  shift, and go to state 30
+    WORD     shift, and go to state 31
+    SKIP     shift, and go to state 32
+    ASCII    shift, and go to state 33
+    EQU      shift, and go to state 34
+    END      shift, and go to state 73
+    ENDL     shift, and go to state 35
+
+    $default  reduce using rule 2 (lines)
+
+    lines       go to state 74
+    line        go to state 38
+    contents    go to state 39
+    dir         go to state 40
+    globdir     go to state 41
+    externdir   go to state 42
+    sectiondir  go to state 43
+    worddir     go to state 44
+    skipdir     go to state 45
+    asciidir    go to state 46
+    equdir      go to state 47
+    expr        go to state 48
+    NOINSTR     go to state 49
+    OINSTR      go to state 50
+    GGOINSTR    go to state 51
+    GINSTR      go to state 52
+    GGINSTR     go to state 53
+    OGINSTR     go to state 54
+    GOINSTR     go to state 55
+    CGINSTR     go to state 56
+    GCINSTR     go to state 57
+    endexpr     go to state 75
+
+
+State 39
+
+    5 line: contents • ENDL
+
+    ENDL  shift, and go to state 76
+
+
+State 40
+
+   11 contents: dir •
+
+    $default  reduce using rule 11 (contents)
+
+
+State 41
+
+   12 dir: globdir •
+
+    $default  reduce using rule 12 (dir)
+
+
+State 42
+
+   13 dir: externdir •
+
+    $default  reduce using rule 13 (dir)
+
+
+State 43
+
+   14 dir: sectiondir •
+
+    $default  reduce using rule 14 (dir)
+
+
+State 44
+
+   15 dir: worddir •
+
+    $default  reduce using rule 15 (dir)
+
+
+State 45
+
+   16 dir: skipdir •
+
+    $default  reduce using rule 16 (dir)
+
+
+State 46
+
+   17 dir: asciidir •
+
+    $default  reduce using rule 17 (dir)
+
+
+State 47
+
+   18 dir: equdir •
+
+    $default  reduce using rule 18 (dir)
+
+
+State 48
+
+   10 contents: expr •
+
+    $default  reduce using rule 10 (contents)
+
+
+State 49
+
+   58 expr: NOINSTR •
+
+    $default  reduce using rule 58 (expr)
+
+
+State 50
+
+   59 expr: OINSTR • operand
+
+    SYMBOL     shift, and go to state 77
+    LITERRAL   shift, and go to state 78
+    GPR        shift, and go to state 79
+    DOT        shift, and go to state 80
+    EXPRSTART  shift, and go to state 81
+    DOLLAR     shift, and go to state 82
+
+    operand  go to state 83
+
+
+State 51
+
+   60 expr: GGOINSTR • GPR SEP GPR SEP boperand
+
+    GPR  shift, and go to state 84
+
+
+State 52
+
+   61 expr: GINSTR • GPR
+
+    GPR  shift, and go to state 85
+
+
+State 53
+
+   62 expr: GGINSTR • GPR SEP GPR
+
+    GPR  shift, and go to state 86
+
+
+State 54
+
+   63 expr: OGINSTR • operand SEP GPR
+
+    SYMBOL     shift, and go to state 77
+    LITERRAL   shift, and go to state 78
+    GPR        shift, and go to state 79
+    DOT        shift, and go to state 80
+    EXPRSTART  shift, and go to state 81
+    DOLLAR     shift, and go to state 82
+
+    operand  go to state 87
+
+
+State 55
+
+   64 expr: GOINSTR • GPR SEP operand
+
+    GPR  shift, and go to state 88
+
+
+State 56
+
+   65 expr: CGINSTR • CSR SEP GPR
+
+    CSR  shift, and go to state 89
+
+
+State 57
+
+   66 expr: GCINSTR • GPR SEP CSR
+
+    GPR  shift, and go to state 90
+
+
+State 58
+
+    9 contents: LABEL dir •
+
+    $default  reduce using rule 9 (contents)
+
+
+State 59
+
+    8 contents: LABEL expr •
+
+    $default  reduce using rule 8 (contents)
+
+
+State 60
+
+   20 gelist: SYMBOL •
+
+    $default  reduce using rule 20 (gelist)
+
+
+State 61
+
+   19 globdir: GLOBAL gelist •
+   21 gelist: gelist • SEP SYMBOL
+
+    SEP  shift, and go to state 91
+
+    $default  reduce using rule 19 (globdir)
+
+
+State 62
+
+   21 gelist: gelist • SEP SYMBOL
+   22 externdir: EXTERN gelist •
+
+    SEP  shift, and go to state 91
+
+    $default  reduce using rule 22 (externdir)
+
+
+State 63
+
+   23 sectiondir: SECTION SYMBOL •
+
+    $default  reduce using rule 23 (sectiondir)
+
+
+State 64
+
+   27 wordelem: SYMBOL •
+
+    $default  reduce using rule 27 (wordelem)
+
+
+State 65
+
+   28 wordelem: LITERRAL •
+
+    $default  reduce using rule 28 (wordelem)
+
+
+State 66
+
+   29 wordelem: DOT •
+
+    $default  reduce using rule 29 (wordelem)
+
+
+State 67
+
+   24 worddir: WORD wlist •
+   26 wlist: wlist • SEP wordelem
+
+    SEP  shift, and go to state 92
+
+    $default  reduce using rule 24 (worddir)
+
+
+State 68
+
+   25 wlist: wordelem •
+
+    $default  reduce using rule 25 (wlist)
+
+
+State 69
+
+   30 skipdir: SKIP LITERRAL •
+
+    $default  reduce using rule 30 (skipdir)
+
+
+State 70
+
+   31 asciidir: ASCII STRING •
+
+    $default  reduce using rule 31 (asciidir)
+
+
+State 71
+
+   32 equdir: EQU SYMBOL • SEP numexpr
+
+    SEP  shift, and go to state 93
+
+
+State 72
+
+    0 $accept: bison $end •
+
+    $default  accept
+
+
+State 73
+
+  105 endexpr: END •
+  106        | END • ENDL
+
+    ENDL  shift, and go to state 94
+
+    $default  reduce using rule 105 (endexpr)
+
+
+State 74
+
+    3 lines: line lines •
+
+    $default  reduce using rule 3 (lines)
+
+
+State 75
+
+    4 lines: line endexpr •
+
+    $default  reduce using rule 4 (lines)
+
+
+State 76
+
+    5 line: contents ENDL •
+
+    $default  reduce using rule 5 (line)
+
+
+State 77
+
+   74 operand: SYMBOL •
+
+    $default  reduce using rule 74 (operand)
+
+
+State 78
+
+   73 operand: LITERRAL •
+
+    $default  reduce using rule 73 (operand)
+
+
+State 79
+
+   76 operand: GPR •
+
+    $default  reduce using rule 76 (operand)
+
+
+State 80
+
+   75 operand: DOT •
+
+    $default  reduce using rule 75 (operand)
+
+
+State 81
+
+   77 operand: EXPRSTART • GPR EXPREND
+   78        | EXPRSTART • GPR PLUS boperand EXPREND
+
+    GPR  shift, and go to state 95
+
+
+State 82
+
+   70 operand: DOLLAR • LITERRAL
+   71        | DOLLAR • SYMBOL
+   72        | DOLLAR • DOT
+
+    SYMBOL    shift, and go to state 96
+    LITERRAL  shift, and go to state 97
+    DOT       shift, and go to state 98
+
+
+State 83
+
+   59 expr: OINSTR operand •
+
+    $default  reduce using rule 59 (expr)
+
+
+State 84
+
+   60 expr: GGOINSTR GPR • SEP GPR SEP boperand
+
+    SEP  shift, and go to state 99
+
+
+State 85
+
+   61 expr: GINSTR GPR •
+
+    $default  reduce using rule 61 (expr)
+
+
+State 86
+
+   62 expr: GGINSTR GPR • SEP GPR
+
+    SEP  shift, and go to state 100
+
+
+State 87
+
+   63 expr: OGINSTR operand • SEP GPR
+
+    SEP  shift, and go to state 101
+
+
+State 88
+
+   64 expr: GOINSTR GPR • SEP operand
+
+    SEP  shift, and go to state 102
+
+
+State 89
+
+   65 expr: CGINSTR CSR • SEP GPR
+
+    SEP  shift, and go to state 103
+
+
+State 90
+
+   66 expr: GCINSTR GPR • SEP CSR
+
+    SEP  shift, and go to state 104
+
+
+State 91
+
+   21 gelist: gelist SEP • SYMBOL
+
+    SYMBOL  shift, and go to state 105
+
+
+State 92
+
+   26 wlist: wlist SEP • wordelem
+
+    SYMBOL    shift, and go to state 64
+    LITERRAL  shift, and go to state 65
+    DOT       shift, and go to state 66
+
+    wordelem  go to state 106
+
+
+State 93
+
+   32 equdir: EQU SYMBOL SEP • numexpr
+
+    SYMBOL        shift, and go to state 107
+    LITERRAL      shift, and go to state 108
+    DOT           shift, and go to state 109
+    MINUS         shift, and go to state 110
+    NOTOP         shift, and go to state 111
+    SUBEXPRSTART  shift, and go to state 112
+
+    numexpr  go to state 113
+
+
+State 94
+
+  106 endexpr: END ENDL •
+
+    $default  reduce using rule 106 (endexpr)
+
+
+State 95
+
+   77 operand: EXPRSTART GPR • EXPREND
+   78        | EXPRSTART GPR • PLUS boperand EXPREND
+
+    PLUS     shift, and go to state 114
+    EXPREND  shift, and go to state 115
+
+
+State 96
+
+   71 operand: DOLLAR SYMBOL •
+
+    $default  reduce using rule 71 (operand)
+
+
+State 97
+
+   70 operand: DOLLAR LITERRAL •
+
+    $default  reduce using rule 70 (operand)
+
+
+State 98
+
+   72 operand: DOLLAR DOT •
+
+    $default  reduce using rule 72 (operand)
+
+
+State 99
+
+   60 expr: GGOINSTR GPR SEP • GPR SEP boperand
+
+    GPR  shift, and go to state 116
+
+
+State 100
+
+   62 expr: GGINSTR GPR SEP • GPR
+
+    GPR  shift, and go to state 117
+
+
+State 101
+
+   63 expr: OGINSTR operand SEP • GPR
+
+    GPR  shift, and go to state 118
+
+
+State 102
+
+   64 expr: GOINSTR GPR SEP • operand
+
+    SYMBOL     shift, and go to state 77
+    LITERRAL   shift, and go to state 78
+    GPR        shift, and go to state 79
+    DOT        shift, and go to state 80
+    EXPRSTART  shift, and go to state 81
+    DOLLAR     shift, and go to state 82
+
+    operand  go to state 119
+
+
+State 103
+
+   65 expr: CGINSTR CSR SEP • GPR
+
+    GPR  shift, and go to state 120
+
+
+State 104
+
+   66 expr: GCINSTR GPR SEP • CSR
+
+    CSR  shift, and go to state 121
+
+
+State 105
+
+   21 gelist: gelist SEP SYMBOL •
+
+    $default  reduce using rule 21 (gelist)
+
+
+State 106
+
+   26 wlist: wlist SEP wordelem •
+
+    $default  reduce using rule 26 (wlist)
+
+
+State 107
+
+   34 numexpr: SYMBOL •
+
+    $default  reduce using rule 34 (numexpr)
+
+
+State 108
+
+   33 numexpr: LITERRAL •
+
+    $default  reduce using rule 33 (numexpr)
+
+
+State 109
+
+   35 numexpr: DOT •
+
+    $default  reduce using rule 35 (numexpr)
+
+
+State 110
+
+   37 numexpr: MINUS • numexpr
+
+    SYMBOL        shift, and go to state 107
+    LITERRAL      shift, and go to state 108
+    DOT           shift, and go to state 109
+    MINUS         shift, and go to state 110
+    NOTOP         shift, and go to state 111
+    SUBEXPRSTART  shift, and go to state 112
+
+    numexpr  go to state 122
+
+
+State 111
+
+   38 numexpr: NOTOP • numexpr
+
+    SYMBOL        shift, and go to state 107
+    LITERRAL      shift, and go to state 108
+    DOT           shift, and go to state 109
+    MINUS         shift, and go to state 110
+    NOTOP         shift, and go to state 111
+    SUBEXPRSTART  shift, and go to state 112
+
+    numexpr  go to state 123
+
+
+State 112
+
+   36 numexpr: SUBEXPRSTART • numexpr SUBEXPREND
+
+    SYMBOL        shift, and go to state 107
+    LITERRAL      shift, and go to state 108
+    DOT           shift, and go to state 109
+    MINUS         shift, and go to state 110
+    NOTOP         shift, and go to state 111
+    SUBEXPRSTART  shift, and go to state 112
+
+    numexpr  go to state 124
+
+
+State 113
+
+   32 equdir: EQU SYMBOL SEP numexpr •
+   39 numexpr: numexpr • PLUS numexpr
+   40        | numexpr • MINUS numexpr
+   41        | numexpr • MULOP numexpr
+   42        | numexpr • DIVOP numexpr
+   43        | numexpr • MOD numexpr
+   44        | numexpr • GEQ numexpr
+   45        | numexpr • LEQ numexpr
+   46        | numexpr • SHLOP numexpr
+   47        | numexpr • SHROP numexpr
+   48        | numexpr • LAND numexpr
+   49        | numexpr • LOR numexpr
+   50        | numexpr • OROP numexpr
+   51        | numexpr • ANDOP numexpr
+   52        | numexpr • XOROP numexpr
+   53        | numexpr • ORNOT numexpr
+   54        | numexpr • EQ numexpr
+   55        | numexpr • NEQ numexpr
+   56        | numexpr • LESS numexpr
+   57        | numexpr • GREAT numexpr
+
+    LAND   shift, and go to state 125
+    LOR    shift, and go to state 126
+    EQ     shift, and go to state 127
+    NEQ    shift, and go to state 128
+    LEQ    shift, and go to state 129
+    LESS   shift, and go to state 130
+    GREAT  shift, and go to state 131
+    GEQ    shift, and go to state 132
+    PLUS   shift, and go to state 133
+    MINUS  shift, and go to state 134
+    OROP   shift, and go to state 135
+    ANDOP  shift, and go to state 136
+    XOROP  shift, and go to state 137
+    ORNOT  shift, and go to state 138
+    MULOP  shift, and go to state 139
+    DIVOP  shift, and go to state 140
+    MOD    shift, and go to state 141
+    SHROP  shift, and go to state 142
+    SHLOP  shift, and go to state 143
+
+    $default  reduce using rule 32 (equdir)
+
+
+State 114
+
+   78 operand: EXPRSTART GPR PLUS • boperand EXPREND
+
+    SYMBOL    shift, and go to state 144
+    LITERRAL  shift, and go to state 145
+    DOT       shift, and go to state 146
+
+    boperand  go to state 147
+
+
+State 115
+
+   77 operand: EXPRSTART GPR EXPREND •
+
+    $default  reduce using rule 77 (operand)
+
+
+State 116
+
+   60 expr: GGOINSTR GPR SEP GPR • SEP boperand
+
+    SEP  shift, and go to state 148
+
+
+State 117
+
+   62 expr: GGINSTR GPR SEP GPR •
+
+    $default  reduce using rule 62 (expr)
+
+
+State 118
+
+   63 expr: OGINSTR operand SEP GPR •
+
+    $default  reduce using rule 63 (expr)
+
+
+State 119
+
+   64 expr: GOINSTR GPR SEP operand •
+
+    $default  reduce using rule 64 (expr)
+
+
+State 120
+
+   65 expr: CGINSTR CSR SEP GPR •
+
+    $default  reduce using rule 65 (expr)
+
+
+State 121
+
+   66 expr: GCINSTR GPR SEP CSR •
+
+    $default  reduce using rule 66 (expr)
+
+
+State 122
+
+   37 numexpr: MINUS numexpr •
+   39        | numexpr • PLUS numexpr
+   40        | numexpr • MINUS numexpr
+   41        | numexpr • MULOP numexpr
+   42        | numexpr • DIVOP numexpr
+   43        | numexpr • MOD numexpr
+   44        | numexpr • GEQ numexpr
+   45        | numexpr • LEQ numexpr
+   46        | numexpr • SHLOP numexpr
+   47        | numexpr • SHROP numexpr
+   48        | numexpr • LAND numexpr
+   49        | numexpr • LOR numexpr
+   50        | numexpr • OROP numexpr
+   51        | numexpr • ANDOP numexpr
+   52        | numexpr • XOROP numexpr
+   53        | numexpr • ORNOT numexpr
+   54        | numexpr • EQ numexpr
+   55        | numexpr • NEQ numexpr
+   56        | numexpr • LESS numexpr
+   57        | numexpr • GREAT numexpr
+
+    $default  reduce using rule 37 (numexpr)
+
+
+State 123
+
+   38 numexpr: NOTOP numexpr •
+   39        | numexpr • PLUS numexpr
+   40        | numexpr • MINUS numexpr
+   41        | numexpr • MULOP numexpr
+   42        | numexpr • DIVOP numexpr
+   43        | numexpr • MOD numexpr
+   44        | numexpr • GEQ numexpr
+   45        | numexpr • LEQ numexpr
+   46        | numexpr • SHLOP numexpr
+   47        | numexpr • SHROP numexpr
+   48        | numexpr • LAND numexpr
+   49        | numexpr • LOR numexpr
+   50        | numexpr • OROP numexpr
+   51        | numexpr • ANDOP numexpr
+   52        | numexpr • XOROP numexpr
+   53        | numexpr • ORNOT numexpr
+   54        | numexpr • EQ numexpr
+   55        | numexpr • NEQ numexpr
+   56        | numexpr • LESS numexpr
+   57        | numexpr • GREAT numexpr
+
+    $default  reduce using rule 38 (numexpr)
+
+
+State 124
+
+   36 numexpr: SUBEXPRSTART numexpr • SUBEXPREND
+   39        | numexpr • PLUS numexpr
+   40        | numexpr • MINUS numexpr
+   41        | numexpr • MULOP numexpr
+   42        | numexpr • DIVOP numexpr
+   43        | numexpr • MOD numexpr
+   44        | numexpr • GEQ numexpr
+   45        | numexpr • LEQ numexpr
+   46        | numexpr • SHLOP numexpr
+   47        | numexpr • SHROP numexpr
+   48        | numexpr • LAND numexpr
+   49        | numexpr • LOR numexpr
+   50        | numexpr • OROP numexpr
+   51        | numexpr • ANDOP numexpr
+   52        | numexpr • XOROP numexpr
+   53        | numexpr • ORNOT numexpr
+   54        | numexpr • EQ numexpr
+   55        | numexpr • NEQ numexpr
+   56        | numexpr • LESS numexpr
+   57        | numexpr • GREAT numexpr
+
+    LAND        shift, and go to state 125
+    LOR         shift, and go to state 126
+    EQ          shift, and go to state 127
+    NEQ         shift, and go to state 128
+    LEQ         shift, and go to state 129
+    LESS        shift, and go to state 130
+    GREAT       shift, and go to state 131
+    GEQ         shift, and go to state 132
+    PLUS        shift, and go to state 133
+    MINUS       shift, and go to state 134
+    OROP        shift, and go to state 135
+    ANDOP       shift, and go to state 136
+    XOROP       shift, and go to state 137
+    ORNOT       shift, and go to state 138
+    MULOP       shift, and go to state 139
+    DIVOP       shift, and go to state 140
+    MOD         shift, and go to state 141
+    SHROP       shift, and go to state 142
+    SHLOP       shift, and go to state 143
+    SUBEXPREND  shift, and go to state 149
+
+
+State 125
+
+   48 numexpr: numexpr LAND • numexpr
+
+    SYMBOL        shift, and go to state 107
+    LITERRAL      shift, and go to state 108
+    DOT           shift, and go to state 109
+    MINUS         shift, and go to state 110
+    NOTOP         shift, and go to state 111
+    SUBEXPRSTART  shift, and go to state 112
+
+    numexpr  go to state 150
+
+
+State 126
+
+   49 numexpr: numexpr LOR • numexpr
+
+    SYMBOL        shift, and go to state 107
+    LITERRAL      shift, and go to state 108
+    DOT           shift, and go to state 109
+    MINUS         shift, and go to state 110
+    NOTOP         shift, and go to state 111
+    SUBEXPRSTART  shift, and go to state 112
+
+    numexpr  go to state 151
+
+
+State 127
+
+   54 numexpr: numexpr EQ • numexpr
+
+    SYMBOL        shift, and go to state 107
+    LITERRAL      shift, and go to state 108
+    DOT           shift, and go to state 109
+    MINUS         shift, and go to state 110
+    NOTOP         shift, and go to state 111
+    SUBEXPRSTART  shift, and go to state 112
+
+    numexpr  go to state 152
+
+
+State 128
+
+   55 numexpr: numexpr NEQ • numexpr
+
+    SYMBOL        shift, and go to state 107
+    LITERRAL      shift, and go to state 108
+    DOT           shift, and go to state 109
+    MINUS         shift, and go to state 110
+    NOTOP         shift, and go to state 111
+    SUBEXPRSTART  shift, and go to state 112
+
+    numexpr  go to state 153
+
+
+State 129
+
+   45 numexpr: numexpr LEQ • numexpr
+
+    SYMBOL        shift, and go to state 107
+    LITERRAL      shift, and go to state 108
+    DOT           shift, and go to state 109
+    MINUS         shift, and go to state 110
+    NOTOP         shift, and go to state 111
+    SUBEXPRSTART  shift, and go to state 112
+
+    numexpr  go to state 154
+
+
+State 130
+
+   56 numexpr: numexpr LESS • numexpr
+
+    SYMBOL        shift, and go to state 107
+    LITERRAL      shift, and go to state 108
+    DOT           shift, and go to state 109
+    MINUS         shift, and go to state 110
+    NOTOP         shift, and go to state 111
+    SUBEXPRSTART  shift, and go to state 112
+
+    numexpr  go to state 155
+
+
+State 131
+
+   57 numexpr: numexpr GREAT • numexpr
+
+    SYMBOL        shift, and go to state 107
+    LITERRAL      shift, and go to state 108
+    DOT           shift, and go to state 109
+    MINUS         shift, and go to state 110
+    NOTOP         shift, and go to state 111
+    SUBEXPRSTART  shift, and go to state 112
+
+    numexpr  go to state 156
+
+
+State 132
+
+   44 numexpr: numexpr GEQ • numexpr
+
+    SYMBOL        shift, and go to state 107
+    LITERRAL      shift, and go to state 108
+    DOT           shift, and go to state 109
+    MINUS         shift, and go to state 110
+    NOTOP         shift, and go to state 111
+    SUBEXPRSTART  shift, and go to state 112
+
+    numexpr  go to state 157
+
+
+State 133
+
+   39 numexpr: numexpr PLUS • numexpr
+
+    SYMBOL        shift, and go to state 107
+    LITERRAL      shift, and go to state 108
+    DOT           shift, and go to state 109
+    MINUS         shift, and go to state 110
+    NOTOP         shift, and go to state 111
+    SUBEXPRSTART  shift, and go to state 112
+
+    numexpr  go to state 158
+
+
+State 134
+
+   40 numexpr: numexpr MINUS • numexpr
+
+    SYMBOL        shift, and go to state 107
+    LITERRAL      shift, and go to state 108
+    DOT           shift, and go to state 109
+    MINUS         shift, and go to state 110
+    NOTOP         shift, and go to state 111
+    SUBEXPRSTART  shift, and go to state 112
+
+    numexpr  go to state 159
+
+
+State 135
+
+   50 numexpr: numexpr OROP • numexpr
+
+    SYMBOL        shift, and go to state 107
+    LITERRAL      shift, and go to state 108
+    DOT           shift, and go to state 109
+    MINUS         shift, and go to state 110
+    NOTOP         shift, and go to state 111
+    SUBEXPRSTART  shift, and go to state 112
+
+    numexpr  go to state 160
+
+
+State 136
+
+   51 numexpr: numexpr ANDOP • numexpr
+
+    SYMBOL        shift, and go to state 107
+    LITERRAL      shift, and go to state 108
+    DOT           shift, and go to state 109
+    MINUS         shift, and go to state 110
+    NOTOP         shift, and go to state 111
+    SUBEXPRSTART  shift, and go to state 112
+
+    numexpr  go to state 161
+
+
+State 137
+
+   52 numexpr: numexpr XOROP • numexpr
+
+    SYMBOL        shift, and go to state 107
+    LITERRAL      shift, and go to state 108
+    DOT           shift, and go to state 109
+    MINUS         shift, and go to state 110
+    NOTOP         shift, and go to state 111
+    SUBEXPRSTART  shift, and go to state 112
+
+    numexpr  go to state 162
+
+
+State 138
+
+   53 numexpr: numexpr ORNOT • numexpr
+
+    SYMBOL        shift, and go to state 107
+    LITERRAL      shift, and go to state 108
+    DOT           shift, and go to state 109
+    MINUS         shift, and go to state 110
+    NOTOP         shift, and go to state 111
+    SUBEXPRSTART  shift, and go to state 112
+
+    numexpr  go to state 163
+
+
+State 139
+
+   41 numexpr: numexpr MULOP • numexpr
+
+    SYMBOL        shift, and go to state 107
+    LITERRAL      shift, and go to state 108
+    DOT           shift, and go to state 109
+    MINUS         shift, and go to state 110
+    NOTOP         shift, and go to state 111
+    SUBEXPRSTART  shift, and go to state 112
+
+    numexpr  go to state 164
+
+
+State 140
+
+   42 numexpr: numexpr DIVOP • numexpr
+
+    SYMBOL        shift, and go to state 107
+    LITERRAL      shift, and go to state 108
+    DOT           shift, and go to state 109
+    MINUS         shift, and go to state 110
+    NOTOP         shift, and go to state 111
+    SUBEXPRSTART  shift, and go to state 112
+
+    numexpr  go to state 165
+
+
+State 141
+
+   43 numexpr: numexpr MOD • numexpr
+
+    SYMBOL        shift, and go to state 107
+    LITERRAL      shift, and go to state 108
+    DOT           shift, and go to state 109
+    MINUS         shift, and go to state 110
+    NOTOP         shift, and go to state 111
+    SUBEXPRSTART  shift, and go to state 112
+
+    numexpr  go to state 166
+
+
+State 142
+
+   47 numexpr: numexpr SHROP • numexpr
+
+    SYMBOL        shift, and go to state 107
+    LITERRAL      shift, and go to state 108
+    DOT           shift, and go to state 109
+    MINUS         shift, and go to state 110
+    NOTOP         shift, and go to state 111
+    SUBEXPRSTART  shift, and go to state 112
+
+    numexpr  go to state 167
+
+
+State 143
+
+   46 numexpr: numexpr SHLOP • numexpr
+
+    SYMBOL        shift, and go to state 107
+    LITERRAL      shift, and go to state 108
+    DOT           shift, and go to state 109
+    MINUS         shift, and go to state 110
+    NOTOP         shift, and go to state 111
+    SUBEXPRSTART  shift, and go to state 112
+
+    numexpr  go to state 168
+
+
+State 144
+
+   68 boperand: SYMBOL •
+
+    $default  reduce using rule 68 (boperand)
+
+
+State 145
+
+   67 boperand: LITERRAL •
+
+    $default  reduce using rule 67 (boperand)
+
+
+State 146
+
+   69 boperand: DOT •
+
+    $default  reduce using rule 69 (boperand)
+
+
+State 147
+
+   78 operand: EXPRSTART GPR PLUS boperand • EXPREND
+
+    EXPREND  shift, and go to state 169
+
+
+State 148
+
+   60 expr: GGOINSTR GPR SEP GPR SEP • boperand
+
+    SYMBOL    shift, and go to state 144
+    LITERRAL  shift, and go to state 145
+    DOT       shift, and go to state 146
+
+    boperand  go to state 170
+
+
+State 149
+
+   36 numexpr: SUBEXPRSTART numexpr SUBEXPREND •
+
+    $default  reduce using rule 36 (numexpr)
+
+
+State 150
+
+   39 numexpr: numexpr • PLUS numexpr
+   40        | numexpr • MINUS numexpr
+   41        | numexpr • MULOP numexpr
+   42        | numexpr • DIVOP numexpr
+   43        | numexpr • MOD numexpr
+   44        | numexpr • GEQ numexpr
+   45        | numexpr • LEQ numexpr
+   46        | numexpr • SHLOP numexpr
+   47        | numexpr • SHROP numexpr
+   48        | numexpr • LAND numexpr
+   48        | numexpr LAND numexpr •
+   49        | numexpr • LOR numexpr
+   50        | numexpr • OROP numexpr
+   51        | numexpr • ANDOP numexpr
+   52        | numexpr • XOROP numexpr
+   53        | numexpr • ORNOT numexpr
+   54        | numexpr • EQ numexpr
+   55        | numexpr • NEQ numexpr
+   56        | numexpr • LESS numexpr
+   57        | numexpr • GREAT numexpr
+
+    EQ     shift, and go to state 127
+    NEQ    shift, and go to state 128
+    LEQ    shift, and go to state 129
+    LESS   shift, and go to state 130
+    GREAT  shift, and go to state 131
+    GEQ    shift, and go to state 132
+    PLUS   shift, and go to state 133
+    MINUS  shift, and go to state 134
+    OROP   shift, and go to state 135
+    ANDOP  shift, and go to state 136
+    XOROP  shift, and go to state 137
+    ORNOT  shift, and go to state 138
+    MULOP  shift, and go to state 139
+    DIVOP  shift, and go to state 140
+    MOD    shift, and go to state 141
+    SHROP  shift, and go to state 142
+    SHLOP  shift, and go to state 143
+
+    $default  reduce using rule 48 (numexpr)
+
+
+State 151
+
+   39 numexpr: numexpr • PLUS numexpr
+   40        | numexpr • MINUS numexpr
+   41        | numexpr • MULOP numexpr
+   42        | numexpr • DIVOP numexpr
+   43        | numexpr • MOD numexpr
+   44        | numexpr • GEQ numexpr
+   45        | numexpr • LEQ numexpr
+   46        | numexpr • SHLOP numexpr
+   47        | numexpr • SHROP numexpr
+   48        | numexpr • LAND numexpr
+   49        | numexpr • LOR numexpr
+   49        | numexpr LOR numexpr •
+   50        | numexpr • OROP numexpr
+   51        | numexpr • ANDOP numexpr
+   52        | numexpr • XOROP numexpr
+   53        | numexpr • ORNOT numexpr
+   54        | numexpr • EQ numexpr
+   55        | numexpr • NEQ numexpr
+   56        | numexpr • LESS numexpr
+   57        | numexpr • GREAT numexpr
+
+    LAND   shift, and go to state 125
+    EQ     shift, and go to state 127
+    NEQ    shift, and go to state 128
+    LEQ    shift, and go to state 129
+    LESS   shift, and go to state 130
+    GREAT  shift, and go to state 131
+    GEQ    shift, and go to state 132
+    PLUS   shift, and go to state 133
+    MINUS  shift, and go to state 134
+    OROP   shift, and go to state 135
+    ANDOP  shift, and go to state 136
+    XOROP  shift, and go to state 137
+    ORNOT  shift, and go to state 138
+    MULOP  shift, and go to state 139
+    DIVOP  shift, and go to state 140
+    MOD    shift, and go to state 141
+    SHROP  shift, and go to state 142
+    SHLOP  shift, and go to state 143
+
+    $default  reduce using rule 49 (numexpr)
+
+
+State 152
+
+   39 numexpr: numexpr • PLUS numexpr
+   40        | numexpr • MINUS numexpr
+   41        | numexpr • MULOP numexpr
+   42        | numexpr • DIVOP numexpr
+   43        | numexpr • MOD numexpr
+   44        | numexpr • GEQ numexpr
+   45        | numexpr • LEQ numexpr
+   46        | numexpr • SHLOP numexpr
+   47        | numexpr • SHROP numexpr
+   48        | numexpr • LAND numexpr
+   49        | numexpr • LOR numexpr
+   50        | numexpr • OROP numexpr
+   51        | numexpr • ANDOP numexpr
+   52        | numexpr • XOROP numexpr
+   53        | numexpr • ORNOT numexpr
+   54        | numexpr • EQ numexpr
+   54        | numexpr EQ numexpr •
+   55        | numexpr • NEQ numexpr
+   56        | numexpr • LESS numexpr
+   57        | numexpr • GREAT numexpr
+
+    PLUS   shift, and go to state 133
+    MINUS  shift, and go to state 134
+    OROP   shift, and go to state 135
+    ANDOP  shift, and go to state 136
+    XOROP  shift, and go to state 137
+    ORNOT  shift, and go to state 138
+    MULOP  shift, and go to state 139
+    DIVOP  shift, and go to state 140
+    MOD    shift, and go to state 141
+    SHROP  shift, and go to state 142
+    SHLOP  shift, and go to state 143
+
+    $default  reduce using rule 54 (numexpr)
+
+
+State 153
+
+   39 numexpr: numexpr • PLUS numexpr
+   40        | numexpr • MINUS numexpr
+   41        | numexpr • MULOP numexpr
+   42        | numexpr • DIVOP numexpr
+   43        | numexpr • MOD numexpr
+   44        | numexpr • GEQ numexpr
+   45        | numexpr • LEQ numexpr
+   46        | numexpr • SHLOP numexpr
+   47        | numexpr • SHROP numexpr
+   48        | numexpr • LAND numexpr
+   49        | numexpr • LOR numexpr
+   50        | numexpr • OROP numexpr
+   51        | numexpr • ANDOP numexpr
+   52        | numexpr • XOROP numexpr
+   53        | numexpr • ORNOT numexpr
+   54        | numexpr • EQ numexpr
+   55        | numexpr • NEQ numexpr
+   55        | numexpr NEQ numexpr •
+   56        | numexpr • LESS numexpr
+   57        | numexpr • GREAT numexpr
+
+    PLUS   shift, and go to state 133
+    MINUS  shift, and go to state 134
+    OROP   shift, and go to state 135
+    ANDOP  shift, and go to state 136
+    XOROP  shift, and go to state 137
+    ORNOT  shift, and go to state 138
+    MULOP  shift, and go to state 139
+    DIVOP  shift, and go to state 140
+    MOD    shift, and go to state 141
+    SHROP  shift, and go to state 142
+    SHLOP  shift, and go to state 143
+
+    $default  reduce using rule 55 (numexpr)
+
+
+State 154
+
+   39 numexpr: numexpr • PLUS numexpr
+   40        | numexpr • MINUS numexpr
+   41        | numexpr • MULOP numexpr
+   42        | numexpr • DIVOP numexpr
+   43        | numexpr • MOD numexpr
+   44        | numexpr • GEQ numexpr
+   45        | numexpr • LEQ numexpr
+   45        | numexpr LEQ numexpr •
+   46        | numexpr • SHLOP numexpr
+   47        | numexpr • SHROP numexpr
+   48        | numexpr • LAND numexpr
+   49        | numexpr • LOR numexpr
+   50        | numexpr • OROP numexpr
+   51        | numexpr • ANDOP numexpr
+   52        | numexpr • XOROP numexpr
+   53        | numexpr • ORNOT numexpr
+   54        | numexpr • EQ numexpr
+   55        | numexpr • NEQ numexpr
+   56        | numexpr • LESS numexpr
+   57        | numexpr • GREAT numexpr
+
+    PLUS   shift, and go to state 133
+    MINUS  shift, and go to state 134
+    OROP   shift, and go to state 135
+    ANDOP  shift, and go to state 136
+    XOROP  shift, and go to state 137
+    ORNOT  shift, and go to state 138
+    MULOP  shift, and go to state 139
+    DIVOP  shift, and go to state 140
+    MOD    shift, and go to state 141
+    SHROP  shift, and go to state 142
+    SHLOP  shift, and go to state 143
+
+    $default  reduce using rule 45 (numexpr)
+
+
+State 155
+
+   39 numexpr: numexpr • PLUS numexpr
+   40        | numexpr • MINUS numexpr
+   41        | numexpr • MULOP numexpr
+   42        | numexpr • DIVOP numexpr
+   43        | numexpr • MOD numexpr
+   44        | numexpr • GEQ numexpr
+   45        | numexpr • LEQ numexpr
+   46        | numexpr • SHLOP numexpr
+   47        | numexpr • SHROP numexpr
+   48        | numexpr • LAND numexpr
+   49        | numexpr • LOR numexpr
+   50        | numexpr • OROP numexpr
+   51        | numexpr • ANDOP numexpr
+   52        | numexpr • XOROP numexpr
+   53        | numexpr • ORNOT numexpr
+   54        | numexpr • EQ numexpr
+   55        | numexpr • NEQ numexpr
+   56        | numexpr • LESS numexpr
+   56        | numexpr LESS numexpr •
+   57        | numexpr • GREAT numexpr
+
+    PLUS   shift, and go to state 133
+    MINUS  shift, and go to state 134
+    OROP   shift, and go to state 135
+    ANDOP  shift, and go to state 136
+    XOROP  shift, and go to state 137
+    ORNOT  shift, and go to state 138
+    MULOP  shift, and go to state 139
+    DIVOP  shift, and go to state 140
+    MOD    shift, and go to state 141
+    SHROP  shift, and go to state 142
+    SHLOP  shift, and go to state 143
+
+    $default  reduce using rule 56 (numexpr)
+
+
+State 156
+
+   39 numexpr: numexpr • PLUS numexpr
+   40        | numexpr • MINUS numexpr
+   41        | numexpr • MULOP numexpr
+   42        | numexpr • DIVOP numexpr
+   43        | numexpr • MOD numexpr
+   44        | numexpr • GEQ numexpr
+   45        | numexpr • LEQ numexpr
+   46        | numexpr • SHLOP numexpr
+   47        | numexpr • SHROP numexpr
+   48        | numexpr • LAND numexpr
+   49        | numexpr • LOR numexpr
+   50        | numexpr • OROP numexpr
+   51        | numexpr • ANDOP numexpr
+   52        | numexpr • XOROP numexpr
+   53        | numexpr • ORNOT numexpr
+   54        | numexpr • EQ numexpr
+   55        | numexpr • NEQ numexpr
+   56        | numexpr • LESS numexpr
+   57        | numexpr • GREAT numexpr
+   57        | numexpr GREAT numexpr •
+
+    PLUS   shift, and go to state 133
+    MINUS  shift, and go to state 134
+    OROP   shift, and go to state 135
+    ANDOP  shift, and go to state 136
+    XOROP  shift, and go to state 137
+    ORNOT  shift, and go to state 138
+    MULOP  shift, and go to state 139
+    DIVOP  shift, and go to state 140
+    MOD    shift, and go to state 141
+    SHROP  shift, and go to state 142
+    SHLOP  shift, and go to state 143
+
+    $default  reduce using rule 57 (numexpr)
+
+
+State 157
+
+   39 numexpr: numexpr • PLUS numexpr
+   40        | numexpr • MINUS numexpr
+   41        | numexpr • MULOP numexpr
+   42        | numexpr • DIVOP numexpr
+   43        | numexpr • MOD numexpr
+   44        | numexpr • GEQ numexpr
+   44        | numexpr GEQ numexpr •
+   45        | numexpr • LEQ numexpr
+   46        | numexpr • SHLOP numexpr
+   47        | numexpr • SHROP numexpr
+   48        | numexpr • LAND numexpr
+   49        | numexpr • LOR numexpr
+   50        | numexpr • OROP numexpr
+   51        | numexpr • ANDOP numexpr
+   52        | numexpr • XOROP numexpr
+   53        | numexpr • ORNOT numexpr
+   54        | numexpr • EQ numexpr
+   55        | numexpr • NEQ numexpr
+   56        | numexpr • LESS numexpr
+   57        | numexpr • GREAT numexpr
+
+    PLUS   shift, and go to state 133
+    MINUS  shift, and go to state 134
+    OROP   shift, and go to state 135
+    ANDOP  shift, and go to state 136
+    XOROP  shift, and go to state 137
+    ORNOT  shift, and go to state 138
+    MULOP  shift, and go to state 139
+    DIVOP  shift, and go to state 140
+    MOD    shift, and go to state 141
+    SHROP  shift, and go to state 142
+    SHLOP  shift, and go to state 143
+
+    $default  reduce using rule 44 (numexpr)
+
+
+State 158
+
+   39 numexpr: numexpr • PLUS numexpr
+   39        | numexpr PLUS numexpr •
+   40        | numexpr • MINUS numexpr
+   41        | numexpr • MULOP numexpr
+   42        | numexpr • DIVOP numexpr
+   43        | numexpr • MOD numexpr
+   44        | numexpr • GEQ numexpr
+   45        | numexpr • LEQ numexpr
+   46        | numexpr • SHLOP numexpr
+   47        | numexpr • SHROP numexpr
+   48        | numexpr • LAND numexpr
+   49        | numexpr • LOR numexpr
+   50        | numexpr • OROP numexpr
+   51        | numexpr • ANDOP numexpr
+   52        | numexpr • XOROP numexpr
+   53        | numexpr • ORNOT numexpr
+   54        | numexpr • EQ numexpr
+   55        | numexpr • NEQ numexpr
+   56        | numexpr • LESS numexpr
+   57        | numexpr • GREAT numexpr
+
+    OROP   shift, and go to state 135
+    ANDOP  shift, and go to state 136
+    XOROP  shift, and go to state 137
+    ORNOT  shift, and go to state 138
+    MULOP  shift, and go to state 139
+    DIVOP  shift, and go to state 140
+    MOD    shift, and go to state 141
+    SHROP  shift, and go to state 142
+    SHLOP  shift, and go to state 143
+
+    $default  reduce using rule 39 (numexpr)
+
+
+State 159
+
+   39 numexpr: numexpr • PLUS numexpr
+   40        | numexpr • MINUS numexpr
+   40        | numexpr MINUS numexpr •
+   41        | numexpr • MULOP numexpr
+   42        | numexpr • DIVOP numexpr
+   43        | numexpr • MOD numexpr
+   44        | numexpr • GEQ numexpr
+   45        | numexpr • LEQ numexpr
+   46        | numexpr • SHLOP numexpr
+   47        | numexpr • SHROP numexpr
+   48        | numexpr • LAND numexpr
+   49        | numexpr • LOR numexpr
+   50        | numexpr • OROP numexpr
+   51        | numexpr • ANDOP numexpr
+   52        | numexpr • XOROP numexpr
+   53        | numexpr • ORNOT numexpr
+   54        | numexpr • EQ numexpr
+   55        | numexpr • NEQ numexpr
+   56        | numexpr • LESS numexpr
+   57        | numexpr • GREAT numexpr
+
+    OROP   shift, and go to state 135
+    ANDOP  shift, and go to state 136
+    XOROP  shift, and go to state 137
+    ORNOT  shift, and go to state 138
+    MULOP  shift, and go to state 139
+    DIVOP  shift, and go to state 140
+    MOD    shift, and go to state 141
+    SHROP  shift, and go to state 142
+    SHLOP  shift, and go to state 143
+
+    $default  reduce using rule 40 (numexpr)
+
+
+State 160
+
+   39 numexpr: numexpr • PLUS numexpr
+   40        | numexpr • MINUS numexpr
+   41        | numexpr • MULOP numexpr
+   42        | numexpr • DIVOP numexpr
+   43        | numexpr • MOD numexpr
+   44        | numexpr • GEQ numexpr
+   45        | numexpr • LEQ numexpr
+   46        | numexpr • SHLOP numexpr
+   47        | numexpr • SHROP numexpr
+   48        | numexpr • LAND numexpr
+   49        | numexpr • LOR numexpr
+   50        | numexpr • OROP numexpr
+   50        | numexpr OROP numexpr •
+   51        | numexpr • ANDOP numexpr
+   52        | numexpr • XOROP numexpr
+   53        | numexpr • ORNOT numexpr
+   54        | numexpr • EQ numexpr
+   55        | numexpr • NEQ numexpr
+   56        | numexpr • LESS numexpr
+   57        | numexpr • GREAT numexpr
+
+    MULOP  shift, and go to state 139
+    DIVOP  shift, and go to state 140
+    MOD    shift, and go to state 141
+    SHROP  shift, and go to state 142
+    SHLOP  shift, and go to state 143
+
+    $default  reduce using rule 50 (numexpr)
+
+
+State 161
+
+   39 numexpr: numexpr • PLUS numexpr
+   40        | numexpr • MINUS numexpr
+   41        | numexpr • MULOP numexpr
+   42        | numexpr • DIVOP numexpr
+   43        | numexpr • MOD numexpr
+   44        | numexpr • GEQ numexpr
+   45        | numexpr • LEQ numexpr
+   46        | numexpr • SHLOP numexpr
+   47        | numexpr • SHROP numexpr
+   48        | numexpr • LAND numexpr
+   49        | numexpr • LOR numexpr
+   50        | numexpr • OROP numexpr
+   51        | numexpr • ANDOP numexpr
+   51        | numexpr ANDOP numexpr •
+   52        | numexpr • XOROP numexpr
+   53        | numexpr • ORNOT numexpr
+   54        | numexpr • EQ numexpr
+   55        | numexpr • NEQ numexpr
+   56        | numexpr • LESS numexpr
+   57        | numexpr • GREAT numexpr
+
+    MULOP  shift, and go to state 139
+    DIVOP  shift, and go to state 140
+    MOD    shift, and go to state 141
+    SHROP  shift, and go to state 142
+    SHLOP  shift, and go to state 143
+
+    $default  reduce using rule 51 (numexpr)
+
+
+State 162
+
+   39 numexpr: numexpr • PLUS numexpr
+   40        | numexpr • MINUS numexpr
+   41        | numexpr • MULOP numexpr
+   42        | numexpr • DIVOP numexpr
+   43        | numexpr • MOD numexpr
+   44        | numexpr • GEQ numexpr
+   45        | numexpr • LEQ numexpr
+   46        | numexpr • SHLOP numexpr
+   47        | numexpr • SHROP numexpr
+   48        | numexpr • LAND numexpr
+   49        | numexpr • LOR numexpr
+   50        | numexpr • OROP numexpr
+   51        | numexpr • ANDOP numexpr
+   52        | numexpr • XOROP numexpr
+   52        | numexpr XOROP numexpr •
+   53        | numexpr • ORNOT numexpr
+   54        | numexpr • EQ numexpr
+   55        | numexpr • NEQ numexpr
+   56        | numexpr • LESS numexpr
+   57        | numexpr • GREAT numexpr
+
+    MULOP  shift, and go to state 139
+    DIVOP  shift, and go to state 140
+    MOD    shift, and go to state 141
+    SHROP  shift, and go to state 142
+    SHLOP  shift, and go to state 143
+
+    $default  reduce using rule 52 (numexpr)
+
+
+State 163
+
+   39 numexpr: numexpr • PLUS numexpr
+   40        | numexpr • MINUS numexpr
+   41        | numexpr • MULOP numexpr
+   42        | numexpr • DIVOP numexpr
+   43        | numexpr • MOD numexpr
+   44        | numexpr • GEQ numexpr
+   45        | numexpr • LEQ numexpr
+   46        | numexpr • SHLOP numexpr
+   47        | numexpr • SHROP numexpr
+   48        | numexpr • LAND numexpr
+   49        | numexpr • LOR numexpr
+   50        | numexpr • OROP numexpr
+   51        | numexpr • ANDOP numexpr
+   52        | numexpr • XOROP numexpr
+   53        | numexpr • ORNOT numexpr
+   53        | numexpr ORNOT numexpr •
+   54        | numexpr • EQ numexpr
+   55        | numexpr • NEQ numexpr
+   56        | numexpr • LESS numexpr
+   57        | numexpr • GREAT numexpr
+
+    MULOP  shift, and go to state 139
+    DIVOP  shift, and go to state 140
+    MOD    shift, and go to state 141
+    SHROP  shift, and go to state 142
+    SHLOP  shift, and go to state 143
+
+    $default  reduce using rule 53 (numexpr)
+
+
+State 164
+
+   39 numexpr: numexpr • PLUS numexpr
+   40        | numexpr • MINUS numexpr
+   41        | numexpr • MULOP numexpr
+   41        | numexpr MULOP numexpr •
+   42        | numexpr • DIVOP numexpr
+   43        | numexpr • MOD numexpr
+   44        | numexpr • GEQ numexpr
+   45        | numexpr • LEQ numexpr
+   46        | numexpr • SHLOP numexpr
+   47        | numexpr • SHROP numexpr
+   48        | numexpr • LAND numexpr
+   49        | numexpr • LOR numexpr
+   50        | numexpr • OROP numexpr
+   51        | numexpr • ANDOP numexpr
+   52        | numexpr • XOROP numexpr
+   53        | numexpr • ORNOT numexpr
+   54        | numexpr • EQ numexpr
+   55        | numexpr • NEQ numexpr
+   56        | numexpr • LESS numexpr
+   57        | numexpr • GREAT numexpr
+
+    $default  reduce using rule 41 (numexpr)
+
+
+State 165
+
+   39 numexpr: numexpr • PLUS numexpr
+   40        | numexpr • MINUS numexpr
+   41        | numexpr • MULOP numexpr
+   42        | numexpr • DIVOP numexpr
+   42        | numexpr DIVOP numexpr •
+   43        | numexpr • MOD numexpr
+   44        | numexpr • GEQ numexpr
+   45        | numexpr • LEQ numexpr
+   46        | numexpr • SHLOP numexpr
+   47        | numexpr • SHROP numexpr
+   48        | numexpr • LAND numexpr
+   49        | numexpr • LOR numexpr
+   50        | numexpr • OROP numexpr
+   51        | numexpr • ANDOP numexpr
+   52        | numexpr • XOROP numexpr
+   53        | numexpr • ORNOT numexpr
+   54        | numexpr • EQ numexpr
+   55        | numexpr • NEQ numexpr
+   56        | numexpr • LESS numexpr
+   57        | numexpr • GREAT numexpr
+
+    $default  reduce using rule 42 (numexpr)
+
+
+State 166
+
+   39 numexpr: numexpr • PLUS numexpr
+   40        | numexpr • MINUS numexpr
+   41        | numexpr • MULOP numexpr
+   42        | numexpr • DIVOP numexpr
+   43        | numexpr • MOD numexpr
+   43        | numexpr MOD numexpr •
+   44        | numexpr • GEQ numexpr
+   45        | numexpr • LEQ numexpr
+   46        | numexpr • SHLOP numexpr
+   47        | numexpr • SHROP numexpr
+   48        | numexpr • LAND numexpr
+   49        | numexpr • LOR numexpr
+   50        | numexpr • OROP numexpr
+   51        | numexpr • ANDOP numexpr
+   52        | numexpr • XOROP numexpr
+   53        | numexpr • ORNOT numexpr
+   54        | numexpr • EQ numexpr
+   55        | numexpr • NEQ numexpr
+   56        | numexpr • LESS numexpr
+   57        | numexpr • GREAT numexpr
+
+    $default  reduce using rule 43 (numexpr)
+
+
+State 167
+
+   39 numexpr: numexpr • PLUS numexpr
+   40        | numexpr • MINUS numexpr
+   41        | numexpr • MULOP numexpr
+   42        | numexpr • DIVOP numexpr
+   43        | numexpr • MOD numexpr
+   44        | numexpr • GEQ numexpr
+   45        | numexpr • LEQ numexpr
+   46        | numexpr • SHLOP numexpr
+   47        | numexpr • SHROP numexpr
+   47        | numexpr SHROP numexpr •
+   48        | numexpr • LAND numexpr
+   49        | numexpr • LOR numexpr
+   50        | numexpr • OROP numexpr
+   51        | numexpr • ANDOP numexpr
+   52        | numexpr • XOROP numexpr
+   53        | numexpr • ORNOT numexpr
+   54        | numexpr • EQ numexpr
+   55        | numexpr • NEQ numexpr
+   56        | numexpr • LESS numexpr
+   57        | numexpr • GREAT numexpr
+
+    $default  reduce using rule 47 (numexpr)
+
+
+State 168
+
+   39 numexpr: numexpr • PLUS numexpr
+   40        | numexpr • MINUS numexpr
+   41        | numexpr • MULOP numexpr
+   42        | numexpr • DIVOP numexpr
+   43        | numexpr • MOD numexpr
+   44        | numexpr • GEQ numexpr
+   45        | numexpr • LEQ numexpr
+   46        | numexpr • SHLOP numexpr
+   46        | numexpr SHLOP numexpr •
+   47        | numexpr • SHROP numexpr
+   48        | numexpr • LAND numexpr
+   49        | numexpr • LOR numexpr
+   50        | numexpr • OROP numexpr
+   51        | numexpr • ANDOP numexpr
+   52        | numexpr • XOROP numexpr
+   53        | numexpr • ORNOT numexpr
+   54        | numexpr • EQ numexpr
+   55        | numexpr • NEQ numexpr
+   56        | numexpr • LESS numexpr
+   57        | numexpr • GREAT numexpr
+
+    $default  reduce using rule 46 (numexpr)
+
+
+State 169
+
+   78 operand: EXPRSTART GPR PLUS boperand EXPREND •
+
+    $default  reduce using rule 78 (operand)
+
+
+State 170
+
+   60 expr: GGOINSTR GPR SEP GPR SEP boperand •
+
+    $default  reduce using rule 60 (expr)
